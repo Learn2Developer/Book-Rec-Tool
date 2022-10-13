@@ -1,6 +1,7 @@
 # Book Recommendation Tool
 import random
 import csv
+from signal import default_int_handler
 
 file = open("Best_Books_Ever.csv")
 
@@ -9,37 +10,15 @@ type(file)
 csvreader = csv.reader(file)
 header = []
 header = next(csvreader)
-print(header)
+# print(header)
 
 rows = []
 for row in csvreader:
     rows.append(row)
 
 
-def genres():
-    genres = []
-    for n in range(len(rows) - 1):
-        genre_str = rows[n][8]
-        genre_str = genre_str.strip(" ")
-        genre_str = genre_str[2:-2]
-        genre_list = genre_str.split("', '")
-        for each in genre_list:
-            genres.append(each)
-    genres = set(genres)
-    genres = sorted(genres)
-    return genres
-
-
-def genre_search(genre):
-    genre_list = []
-    for n in range(len(rows) - 1):
-        if genre in (rows[n][8]):
-            genre_list.append(rows[n][1])
-    return genre_list
-
-
-classics = [genre_search("Classics")]
-print(classics)
+# classics = [genre_search("Classics")]
+# print(classics)
 
 
 def language_list():
@@ -47,6 +26,11 @@ def language_list():
     for n in range(len(rows) - 1):
         languages.append(rows[n][6])
     return languages
+
+
+def default_lang():
+    default_lang = "English"
+    return default_lang
 
 
 def languages_sorted():
@@ -79,5 +63,38 @@ def language():
 # Like, what genres are you interested in?
 # Give them a list of genres!
 
+
+def genres():
+    genres = []
+    for n in range(len(rows) - 1):
+        genre_str = rows[n][8]
+        genre_str = genre_str.strip(" ")
+        genre_str = genre_str[2:-2]
+        genre_list = genre_str.split("', '")
+        for each in genre_list:
+            genres.append(each)
+    genres = set(genres)
+    genres = sorted(genres)
+    return genres
+
+
+def genre_search(genre, genre_2):
+    name_genre = []
+
+    for n in range(len(rows) - 1):
+        if (
+            genre in (rows[n][8])
+            and genre_2 in (rows[n][8])
+            and rows[n][6] == default_lang()
+        ):
+            name_genre.append((rows[n][1], rows[n][8]))
+    name_genre = set(name_genre)
+
+    return sorted(name_genre)
+
+
 genres = genres()
 print(random.choice(genres))
+
+
+print(genre_search("Gender", "Africa"))
