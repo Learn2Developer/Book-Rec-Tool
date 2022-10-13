@@ -78,15 +78,11 @@ def genres():
     return genres
 
 
-def genre_search(genre, genre_2):
+def genre_search(genre):
     name_genre = []
 
     for n in range(len(rows) - 1):
-        if (
-            genre in (rows[n][8])
-            and genre_2 in (rows[n][8])
-            and rows[n][6] == default_lang()
-        ):
+        if genre in (rows[n][8]) and rows[n][6] == default_lang():
             name_genre.append((rows[n][1], rows[n][8]))
     name_genre = set(name_genre)
 
@@ -97,4 +93,19 @@ genres = genres()
 print(random.choice(genres))
 
 
-print(genre_search("Gender", "Africa"))
+print("Hello and welcome to BookRec 0.1v!\n\n")
+choice_choice = input(
+    "First off, how would you like to start your search?\n\nPlease type g for genre, a for author, l for length, or y for year published:\n(g/a/l/y)"
+)
+if choice_choice == "g":
+    genre_choice = input(
+        "\nGreat! What genre are you looking for? (type help for a full list of genres): "
+    )
+    while genre_choice not in genres:
+        if genre_choice == "help":
+            print(genres)
+        genre_choice = input(
+            "Please choose a genre or type 'help' for a full list of options: "
+        )
+    print("Showing top 10 books in category: {}\n".format(genre_choice))
+    print(genre_search(genre_choice))
