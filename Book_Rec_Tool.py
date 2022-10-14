@@ -1,4 +1,5 @@
 # Book Recommendation Tool
+from glob import glob
 from pickletools import float8
 import random
 import csv
@@ -20,6 +21,29 @@ for row in csvreader:
 
 # classics = [genre_search("Classics")]
 # print(classics)
+
+books_dict = {}
+books_list = []
+for n in range(len(rows) - 1):
+    books_dict["book_name"] = rows[n][1]
+    books_dict["author"] = rows[n][3]
+    books_dict["rating"] = rows[n][4]
+    books_dict["description"] = rows[n][5]
+    books_dict["language"] = rows[n][6]
+    genres = []
+    genre_str = rows[n][8]
+    genre_str = genre_str.strip(" ")
+    genre_str = genre_str[2:-2]
+    genre_list = genre_str.split("', '")
+    for each in genre_list:
+        genres.append(each)
+    books_dict["genres"] = genres
+    books_dict["pages"] = rows[n][12]
+    books_dict["year"] = rows[n][14]
+    books_dict["num_ratings"] = rows[n][17]
+    books_dict["liked_percent"] = rows[n][19]
+    books_list.append(books_dict)
+    books_dict = {}
 
 
 def language_list():
@@ -80,25 +104,14 @@ def genres():
 
 
 def genre_search(genre):
-    books_dict = {}
-    book_list = []
-
     for n in range(len(rows) - 1):
-        if genre in (rows[n][8]) and rows[n][6] == default_lang():
-            books_dict["book_name"] = rows[n][1]
-            books_dict["author"] = rows[n][3]
-            books_dict["rating"] = rows[n][4]
-            books_dict["description"] = rows[n][5]
-            books_dict["genres"] = rows[n][8]
-            books_dict["pages"] = rows[n][12]
-            books_dict["year"] = rows[n][14]
-            books_dict["num_ratings"] = rows[n][17]
-            books_dict["liked_percent"] = rows[n][19]
-            book_list.append(books_dict)
-            books_dict = {}
-    # name_genre = set(name_genre)
-    for book in book_list:
-        print(book["genres"])
+        if (
+            genre in books_list[n]["genres"][: int(len(books_list[n]["genres"]) // 2)]
+            and float(books_list[n]["rating"]) >= 4.5
+            and books_list[n]["language"] == default_lang()
+        ):
+
+            print(books_list[n]["book_name"])
 
 
 genres = genres()
