@@ -1,10 +1,8 @@
 # Book Recommendation Tool
-from glob import glob
-from pickletools import float8
 import random
 import csv
-from signal import default_int_handler
 
+search_list = []
 file = open("Best_Books_Ever.csv")
 
 type(file)
