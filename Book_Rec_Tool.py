@@ -1,4 +1,5 @@
 # Book Recommendation Tool
+from pickletools import float8
 import random
 import csv
 from signal import default_int_handler
@@ -79,18 +80,29 @@ def genres():
 
 
 def genre_search(genre):
-    name_genre = []
+    books_dict = {}
+    book_list = []
 
     for n in range(len(rows) - 1):
         if genre in (rows[n][8]) and rows[n][6] == default_lang():
-            name_genre.append((rows[n][1], rows[n][8]))
-    name_genre = set(name_genre)
-
-    return sorted(name_genre)
+            books_dict["book_name"] = rows[n][1]
+            books_dict["author"] = rows[n][3]
+            books_dict["rating"] = rows[n][4]
+            books_dict["description"] = rows[n][5]
+            books_dict["genres"] = rows[n][8]
+            books_dict["pages"] = rows[n][12]
+            books_dict["year"] = rows[n][14]
+            books_dict["num_ratings"] = rows[n][17]
+            books_dict["liked_percent"] = rows[n][19]
+            book_list.append(books_dict)
+            books_dict = {}
+    # name_genre = set(name_genre)
+    for book in book_list:
+        print(book["genres"])
 
 
 genres = genres()
-print(random.choice(genres))
+# print(random.choice(genres))
 
 
 print("Hello and welcome to BookRec 0.1v!\n\n")
@@ -107,5 +119,5 @@ if choice_choice == "g":
         genre_choice = input(
             "Please choose a genre or type 'help' for a full list of options: "
         )
-    print("Showing top 10 books in category: {}\n".format(genre_choice))
-    print(genre_search(genre_choice))
+    print("\nShowing top 20 books in category: {}\n".format(genre_choice))
+    genre_search(genre_choice)
