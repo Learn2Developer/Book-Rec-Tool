@@ -31,6 +31,7 @@ for row in csvreader:
 # classics = [genre_search("Classics")]
 # print(classics)
 
+# Book list create functions
 books_dict = {}
 books_list = []
 for n in range(len(rows) - 1):
@@ -55,7 +56,7 @@ for n in range(len(rows) - 1):
     books_dict = {}
 genre_list = books_list
 
-
+# Language Functions
 def language_list():
     languages = []
     for n in range(len(rows) - 1):
@@ -89,6 +90,7 @@ def language():
             print(rows[n][1])
 
 
+# Rating Function
 def min_rating(length_list_complete):
     rating_choice = float(
         input(
@@ -105,6 +107,7 @@ def min_rating(length_list_complete):
     return rating_list
 
 
+# Year Function
 def year_search(genre_list):
     year = input(
         "How recent was the book published? (type year of oldest disreable result): "
@@ -114,16 +117,7 @@ def year_search(genre_list):
         pass
 
 
-# print(languages_sorted())
-
-# print(popular_langs())
-
-
-# Think of questions to narrow list of books down...
-# Like, what genres are you interested in?
-# Give them a list of genres!
-
-
+# Genre Functions
 def genres():
     genres = []
     for n in range(len(rows) - 1):
@@ -138,21 +132,11 @@ def genres():
     return genres
 
 
-def genre_search(genre, genre_list=None):
+def genre_search(genre, genre_list):
     genre_search_list = []
-    if genre_list == None:
-        for n in range(len(rows) - 1):
-            if genre in books_list[n]["genres"] and (
-                books_list[n]["language"] == default_lang()
-                or books_list[n]["language"] == ""
-            ):
-                genre_search_list.append(books_list[n])
-    else:
-        genre_search_list = []
-        for n in range(len(genre_list) - 1):
-            if genre in genre_list[n]["genres"]:
-                genre_search_list.append(genre_list[n])
-
+    for n in range(len(genre_list) - 1):
+        if genre in genre_list[n]["genres"] and genre_list[n]["language"] == "English":
+            genre_search_list.append(genre_list[n])
     return genre_search_list
 
 
@@ -164,7 +148,6 @@ def genre_choice_search(genre_choice, genre_list):
             "Please choose a genre or type 'help' for a full list of options: "
         )
     print("\nShowing books in category: {}\n".format(genre_choice))
-
     genre_list_new = genre_search(genre_choice, genre_list)
     for genre in genre_list_new:
         print(genre["book_name"])
@@ -176,49 +159,76 @@ def genre_choice_search(genre_choice, genre_list):
         genre_search_again = input("I'm sorry, please choose yes or no. (y/n): ")
 
     if genre_search_again == "y":
-        print(genre_list_new)
+        # print(genre_list_new)
         genre_choice_new = input(
             "What other genre would you list to add? (type help for a full list of genres): "
         )
-
         genre_choice_search(genre_choice_new, genre_list_new)
 
-    else:
-        return genre_list_new
+    return genre_list_new
 
 
+# Book Summary Function
+def book_summary(book_list):
+    summary_choice = input(
+        "Which book would you like to read the summary for? (Please type the book name): "
+    )
+    for book in book_list:
+        if summary_choice == book["book_name"]:
+            print("\n" + book["description"] + "\n")
+
+    summary_again = input("Would you like to see the summary for another book? (y/n): ")
+    while summary_again not in "yn":
+        summary_again = input("Please choose y or n: ")
+    if summary_again == "y":
+        book_summary(book_list)
+
+
+# Book Length Function
 def book_length(list_choice):
     length_list = []
     length_choice = input(
-        "How long would you like the book to be? \nShort, Medium, Long, or Epic? (s/m/l/e): "
+        "How long would you like the book to be? \nAny, Short, Medium, Long, or Epic? (a/s/m/l/e): "
     )
-    while length_choice not in "smle":
+    while length_choice not in "asmle":
         length_choice = input(
-            "Sorry, please choose a book length. Short, Medium, Long, or Epic? (s/m/l/e): "
+            "Sorry, please choose a book length. Any, Short, Medium, Long, or Epic? (a/s/m/l/e): "
         )
-    if length_choice == "s":
+
+    if length_choice == "a":
+        return list_choice
+    elif length_choice == "s":
         for book in list_choice:
-            print(book)
-            if book["pages"] == "" or int(book["pages"]) < 300:
+            if book["pages"] is None or book["pages"] == "":
+                print(book["book_name"] + " pages col is None or ''.")
+                length_list.append(book)
+            elif int(book["pages"]) < 300:
+                print(book["book_name"] + " is less than 300 Pages.")
                 length_list.append(book)
     elif length_choice == "m":
         for book in list_choice:
-            if book["pages"] == None or book["pages"] == "":
-                if int(book["pages"]) >= 300 and int(book["pages"]) < 500:
-                    length_list.append(book)
+            if book["pages"] is None or book["pages"] == "":
+                print(book["book_name"] + " pages col is None or ''.")
+                length_list.append(book)
+            elif int(book["pages"]) >= 300 and int(book["pages"]) < 500:
+                print(book["book_name"] + " is between 300 and 500 Pages.")
+                length_list.append(book)
     elif length_choice == "l":
         for book in list_choice:
-            if (
-                book["pages"] == ""
-                or int(book["pages"]) >= 500
-                and int(book["pages"]) < 700
-            ):
+            if book["pages"] is None or book["pages"] == "":
+                print(book["book_name"] + " pages col is None or ''.")
+                length_list.append(book)
+            elif int(book["pages"]) >= 500 and int(book["pages"]) < 700:
+                print(book["book_name"] + " is between 500 and 700 pages.")
                 length_list.append(book)
     elif length_choice == "e":
         for book in list_choice:
-            if book["pages"] == "" or int(book["pages"]) >= 700:
+            if book["pages"] is None or book["pages"] == "":
+                print(book["book_name"] + " pages col is None or ''.")
                 length_list.append(book)
-
+            elif int(book["pages"]) >= 700:
+                print(book["book_name"] + " is over 700 pages.")
+                length_list.append(book)
     return length_list
 
 
@@ -230,8 +240,9 @@ genre_choice = input(
     "First off, what genre would you like to search for? (type help for a full list of genres): "
 )
 genre_list_complete = genre_choice_search(genre_choice, genre_list)
-print(genre_list_complete)
-# length_list_complete = book_length(genre_list_complete)
-# rating_list_complete = min_rating(length_list_complete)
-# for book in rating_list_complete:
-# print(book["book_name"])
+
+length_list_complete = book_length(genre_list_complete)
+rating_list_complete = min_rating(length_list_complete)
+for book in rating_list_complete:
+    print(book["book_name"])
+book_summary(rating_list_complete)
